@@ -43,5 +43,14 @@
         android:layout_height="400dp"
         android:layout_centerInParent="true" />
 
+    <Button
+        android:id="@+id/to_main_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="33dp"
+        android:text="Go To Map" />
+
 
 </RelativeLayout>

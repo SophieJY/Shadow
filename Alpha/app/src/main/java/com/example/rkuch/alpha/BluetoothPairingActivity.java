@@ -21,6 +21,7 @@ public class BluetoothPairingActivity extends AppCompatActivity implements Adapt
 
     BluetoothAdapter mBluetoothAdapter;
     Button btnPairing;
+    Button goToMap;
     public ArrayList<BluetoothDevice> mBTDevices = new ArrayList<>();
     public DeviceListAdapter mDeviceListAdapter;
     ListView mListView;
@@ -134,6 +135,7 @@ public class BluetoothPairingActivity extends AppCompatActivity implements Adapt
         setContentView(R.layout.activity_bluetooth_pairing);
 
         btnPairing = findViewById(R.id.pairingButton);
+        goToMap = findViewById(R.id.to_main_activity);
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mListView = findViewById(R.id.list_new_device);
 
@@ -147,6 +149,15 @@ public class BluetoothPairingActivity extends AppCompatActivity implements Adapt
             public void onClick(View v) {
                 Log.d(TAG, "onClick: called");
                 enableDisableBT();
+            }
+        });
+
+        goToMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: go to Map");
+                Intent intent = new Intent(BluetoothPairingActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
     }
