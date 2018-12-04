@@ -14,10 +14,25 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
+
 public class MainActivity extends AppCompatActivity implements LocationListener {
+    private final static String TAG = MainActivity.class.getSimpleName();
     LocationManager locationManager;
     Location currentLocation;
 
@@ -26,6 +41,31 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     final Fragment alertsFragment = new AlertsFragment();
     final FragmentManager fragmentManager = getSupportFragmentManager();
     Fragment activeFragment = locationFragment;
+
+    class CoordinateInfo {
+        long timeStamp;
+        double latitude;
+        double longitude;
+
+        CoordinateInfo(long timeStamp, double latitude, double longitude) {
+            this.timeStamp = timeStamp;
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+    }
+
+    PriorityQueue<CoordinateInfo> coordinateList = new PriorityQueue<>(new Comparator<CoordinateInfo>() {
+        @Override
+        public int compare(CoordinateInfo o1, CoordinateInfo o2) {
+            if(o1.timeStamp > o2.timeStamp) {
+                return -1;
+            } else if(o1.timeStamp < o2.timeStamp) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    });
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -67,6 +107,38 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
                     99);
         }
+
+        FirebaseApp.initializeApp(this);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference();
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                coordinateList.clear();
+                Map<String, ArrayList> value = (Map) dataSnapshot.getValue();
+                DataSnapshot ds = dataSnapshot.child("struc");
+                for(DataSnapshot ds_i: dataSnapshot.child("struc").getChildren()) {
+                    Log.d(TAG, "onDataChange: data snapshot: " + ds_i);
+                    String data = (String) ds_i.getValue();
+                    String[] data_split = data.split("/");
+                    coordinateList.add(new CoordinateInfo(Long.parseLong(data_split[0]), Double.parseDouble(data_split[1]), Double.parseDouble(data_split[2])));
+                }
+                //Do this to get the sorted info
+                int size = coordinateList.size();
+                for(int i = 0; i < size; i++) {
+                    CoordinateInfo temp = coordinateList.poll();
+                    Log.d(TAG, "onDataChange: Sort: " + temp.timeStamp + " " + temp.latitude + " " + temp.longitude);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
 
         getLocation();
     }

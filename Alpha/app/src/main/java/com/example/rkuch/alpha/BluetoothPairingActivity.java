@@ -104,16 +104,15 @@ public class BluetoothPairingActivity extends AppCompatActivity implements Adapt
             final String action =  intent.getAction();
 
             if(action.equals(BluetoothDevice.ACTION_BOND_STATE_CHANGED)) {
-                BluetoothDevice mDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                //3 cases:
-                if(mDevice.getBondState() == BluetoothDevice.BOND_BONDED) {
-                    Log.d(TAG, "onReceive: BOND_BONDED");
-                } else if(mDevice.getBondState() == BluetoothDevice.BOND_BONDING) {
-                    Log.d(TAG, "onReceive: BOND_BONDING");
-                } else if(mDevice.getBondState() == BluetoothDevice.BOND_NONE) {
-                    Log.d(TAG, "onReceive: BOND_NONE");
-                }
-
+                    BluetoothDevice mDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    //3 cases:
+                    if(mDevice.getBondState() == BluetoothDevice.BOND_BONDED) {
+                        Log.d(TAG, "onReceive: BOND_BONDED");
+                    } else if(mDevice.getBondState() == BluetoothDevice.BOND_BONDING) {
+                        Log.d(TAG, "onReceive: BOND_BONDING");
+                    } else if(mDevice.getBondState() == BluetoothDevice.BOND_NONE) {
+                        Log.d(TAG, "onReceive: BOND_NONE");
+                    }
             }
         }
     };

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "650094622001",
+    "firebase_url": "https://ucla-cs117-fall2018.firebaseio.com",
+    "project_id": "ucla-cs117-fall2018",
+    "storage_bucket": "ucla-cs117-fall2018.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:650094622001:android:6c7ac693738e645a",
+        "android_client_info": {
+          "package_name": "com.example.rkuch.alpha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "650094622001-cvddudlc2npuhdof8fbav8diuneen599.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rkuch.alpha",
+            "certificate_hash": "97300df2d175099914c856358cf6aa4e7c5bd2c9"
+          }
+        },
+        {
+          "client_id": "650094622001-vpk8vvknqnpbke3a11r9q827rj7usevo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD62Q0Y-t5cEVNiKMCRnPi-nk2GWviT7NE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "650094622001-vpk8vvknqnpbke3a11r9q827rj7usevo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
