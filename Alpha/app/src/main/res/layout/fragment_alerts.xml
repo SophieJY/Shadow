@@ -3,12 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AlertsFragment">
+    tools:context=".AlertsFragment"
+    android:id="@+id/alerts_frame_layout">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="                ALERTS" />
+        android:text="Updating status..."
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:id="@+id/alerts_text_view"/>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_secure_64dp"
+        android:id="@+id/alerts_image_view"/>
 </FrameLayout>

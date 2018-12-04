@@ -1,5 +1,6 @@
 package com.example.rkuch.alpha;
 
+// TODO: Use double for latitude and longitude
 public class HistoryLogEntry {
     private int timestamp;
     private String locationText;

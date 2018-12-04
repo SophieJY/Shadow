@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public void onLocationChanged(Location location) {
         currentLocation = location;
         // DEBUG:
-        Toast.makeText(getApplicationContext(), "ENTRY: " + location.getLatitude() + ", " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "ENTRY: " + location.getLatitude() + ", " + location.getLongitude(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
