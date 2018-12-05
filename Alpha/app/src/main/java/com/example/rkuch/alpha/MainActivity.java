@@ -54,18 +54,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         }
     }
 
-    PriorityQueue<CoordinateInfo> coordinateList = new PriorityQueue<>(new Comparator<CoordinateInfo>() {
-        @Override
-        public int compare(CoordinateInfo o1, CoordinateInfo o2) {
-            if(o1.timeStamp > o2.timeStamp) {
-                return -1;
-            } else if(o1.timeStamp < o2.timeStamp) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-    });
+    ArrayList<CoordinateInfo> coordinateList = new ArrayList<>();
+//            new Comparator<CoordinateInfo>() {
+//        @Override
+//        public int compare(CoordinateInfo o1, CoordinateInfo o2) {
+//            if(o1.timeStamp > o2.timeStamp) {
+//                return -1;
+//            } else if(o1.timeStamp < o2.timeStamp) {
+//                return 1;
+//            } else {
+//                return 0;
+//            }
+//        }
+//    });
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -125,11 +126,28 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     String[] data_split = data.split("/");
                     coordinateList.add(new CoordinateInfo(Long.parseLong(data_split[0]), Double.parseDouble(data_split[1]), Double.parseDouble(data_split[2])));
                 }
+                coordinateList.sort(new Comparator<CoordinateInfo>() {
+                            @Override
+        public int compare(CoordinateInfo o1, CoordinateInfo o2) {
+            if(o1.timeStamp > o2.timeStamp) {
+                return -1;
+            } else if(o1.timeStamp < o2.timeStamp) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    });
+
+                HistoryFragment myFragment = (HistoryFragment) getSupportFragmentManager().findFragmentByTag("2");
+                if(myFragment != null) {
+                    myFragment.prepareEntries();
+                }
                 //Do this to get the sorted info
                 int size = coordinateList.size();
                 for(int i = 0; i < size; i++) {
-                    CoordinateInfo temp = coordinateList.poll();
-                    Log.d(TAG, "onDataChange: Sort: " + temp.timeStamp + " " + temp.latitude + " " + temp.longitude);
+
+                    Log.d(TAG, "onDataChange: Sort: " + coordinateList.get(i).timeStamp + " " +coordinateList.get(i).latitude + " " + coordinateList.get(i).longitude);
                 }
             }
 
