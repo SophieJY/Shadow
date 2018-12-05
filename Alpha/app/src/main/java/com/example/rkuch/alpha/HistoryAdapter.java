@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.security.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
@@ -37,7 +39,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         HistoryLogEntry entry = logEntries.get(position);
-        viewHolder.timestamp.setText(String.valueOf(entry.getTimestamp()));
+        Date date = new Date(entry.getTimestamp());
+        viewHolder.timestamp.setText(date.toString());
         viewHolder.locationText.setText(entry.getLocationText());
     }
 

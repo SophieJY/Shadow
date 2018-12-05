@@ -2,8 +2,14 @@ package com.example.rkuch.alpha;
 
 
 import android.graphics.Color;
+import android.location.Location;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +27,7 @@ import java.util.TimerTask;
 public class AlertsFragment extends Fragment {
     private boolean isSecure = true;
     private Timer timer = new Timer();
+    private final static double RANGE = .00045;
 
     public AlertsFragment() {
         // Required empty public constructor
@@ -43,8 +50,15 @@ public class AlertsFragment extends Fragment {
     }
 
     private void updateStatus() {
-        // TODO: compare coordinates of phone and Arduino
-        isSecure = !isSecure;
+        MainActivity activity = (MainActivity)getActivity();
+        Location phoneLocation = activity.currentLocation;
+        if (phoneLocation == null || activity.coordinateList.isEmpty()) {
+            return;
+        }
+        MainActivity.CoordinateInfo trackerLocation = activity.coordinateList.get(0);
+        isSecure = isWithinRange(
+                phoneLocation.getLatitude(), phoneLocation.getLongitude(),
+                trackerLocation.latitude, trackerLocation.longitude, RANGE);
         View view = getView().findViewById(R.id.alerts_frame_layout);
         TextView textView = getView().findViewById(R.id.alerts_text_view);
         ImageView imageView = getView().findViewById(R.id.alerts_image_view);
@@ -57,6 +71,15 @@ public class AlertsFragment extends Fragment {
             view.setBackgroundColor(Color.RED);
             textView.setText("Your device is not secure. Check map.");
             imageView.setImageResource(R.drawable.ic_warning_64dp);
+
+            ToneGenerator toneGen = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+            toneGen.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD,2000);
+
+            if (Build.VERSION.SDK_INT >= 26) {
+                activity.vibrator.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                activity.vibrator.vibrate(1000);
+            }
         }
     }
 
@@ -66,4 +89,11 @@ public class AlertsFragment extends Fragment {
             updateStatus();
         }
     };
+
+    private boolean isWithinRange(double latA, double lonA, double latB, double lonB, double range) {
+        double latDiff = latA - latB;
+        double lonDiff = lonA - lonB;
+        double distance = Math.sqrt(Math.pow(latDiff, 2) + Math.pow(lonDiff, 2));
+        return distance <= range;
+    }
 }

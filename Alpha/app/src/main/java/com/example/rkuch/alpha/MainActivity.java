@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     final Fragment alertsFragment = new AlertsFragment();
     final FragmentManager fragmentManager = getSupportFragmentManager();
     Fragment activeFragment = locationFragment;
+
+    Vibrator vibrator;
 
     class CoordinateInfo {
         long timeStamp;
@@ -99,6 +102,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        Toast.makeText(this, "Loading location data...", Toast.LENGTH_LONG).show();
+
+        vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
+
         fragmentManager.beginTransaction().add(R.id.main_container, alertsFragment, "3").hide(alertsFragment).commit();
         fragmentManager.beginTransaction().add(R.id.main_container, historyFragment, "2").hide(historyFragment).commit();
         fragmentManager.beginTransaction().add(R.id.main_container, locationFragment, "1").commit();
@@ -108,6 +115,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
                     99);
         }
+
+
 
         FirebaseApp.initializeApp(this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -119,8 +128,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 // whenever data at this location is updated.
                 coordinateList.clear();
                 Map<String, ArrayList> value = (Map) dataSnapshot.getValue();
-                DataSnapshot ds = dataSnapshot.child("struc");
-                for(DataSnapshot ds_i: dataSnapshot.child("struc").getChildren()) {
+                DataSnapshot ds = dataSnapshot.child("arduino");
+                for(DataSnapshot ds_i: dataSnapshot.child("arduino").getChildren()) {
                     Log.d(TAG, "onDataChange: data snapshot: " + ds_i);
                     String data = (String) ds_i.getValue();
                     String[] data_split = data.split("/");

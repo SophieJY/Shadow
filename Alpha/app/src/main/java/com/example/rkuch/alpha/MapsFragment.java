@@ -15,6 +15,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -85,13 +86,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
         mMap.clear();
-        LatLng startLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        LatLng phoneLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         Log.d(TAG, "onMapReady: " + currentLocation.getLatitude() + ", " + currentLocation.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(startLocation).title("You"));
+        mMap.addMarker(new MarkerOptions().position(phoneLocation).title("You"));
+
+        if (activity.coordinateList.size() > 0) {
+            MainActivity.CoordinateInfo trackerCoordInfo = activity.coordinateList.get(0);
+            LatLng trackerLocation = new LatLng(trackerCoordInfo.latitude, trackerCoordInfo.longitude);
+            mMap.addMarker(
+                    new MarkerOptions().position(trackerLocation).title("Your Device")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        }
 
         // Only move the camera the first time to prevent sharp jumps
         if (hasNotYetUpdated) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startLocation, 15));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(phoneLocation, 15));
             hasNotYetUpdated = false;
         }
     }
